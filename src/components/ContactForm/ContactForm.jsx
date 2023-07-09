@@ -1,10 +1,43 @@
-import Proptypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'redux/actions';
+import { getContacts } from 'redux/selectors';
 import css from './ContactForm.module.css';
 
-export const ContactForm = ({ onSubmit }) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const isDuplicate = ({ name, number }) => {
+    const normalizedName = name.toLowerCase().trim();
+    const normalizedNumber = number.trim();
+
+    const duplicate = contacts.find(
+      contact =>
+        contact.name.toLowerCase().trim() === normalizedName ||
+        contact.number.trim() === normalizedNumber
+    );
+    return Boolean(duplicate);
+  };
+
+  const saveContact = event => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const name = form.elements.name.value;
+    const number = form.elements.number.value;
+    if (isDuplicate({ name, number })) {
+      return alert(
+        contacts.find(contact => contact.name === name)
+          ? `${name} is already in contacts`
+          : `${number} is already in contacts`
+      );
+    }
+    dispatch(addContact({ name, number }));
+    form.reset();
+  };
+
   return (
     <section className={css.form}>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={saveContact}>
         <label className={css.item}>
           Name
           <input
@@ -35,6 +68,4 @@ export const ContactForm = ({ onSubmit }) => {
   );
 };
 
-ContactForm.propTypes = {
-  onSubmit: Proptypes.func.isRequired,
-};
+export default ContactForm;
