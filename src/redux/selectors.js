@@ -7,9 +7,9 @@ export const getFilteredContacts = store => {
   }
   const normalizedFilter = filter.toLowerCase();
   const filteredContacts = contacts.filter(
-    contact =>
-      contact.name.toLowerCase().trim().includes(normalizedFilter) ||
-      contact.number.trim().includes(normalizedFilter)
+    ({ name, number }) =>
+      name.toLowerCase().trim().includes(normalizedFilter) ||
+      number.trim().includes(normalizedFilter)
   );
 
   if (normalizedFilter && !filteredContacts.length) {

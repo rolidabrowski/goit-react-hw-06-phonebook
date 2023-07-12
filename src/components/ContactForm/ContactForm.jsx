@@ -12,9 +12,9 @@ export const ContactForm = () => {
     const normalizedNumber = number.trim();
 
     const duplicate = contacts.find(
-      contact =>
-        contact.name.toLowerCase().trim() === normalizedName ||
-        contact.number.trim() === normalizedNumber
+      ({ name, number }) =>
+        name.toLowerCase().trim() === normalizedName ||
+        number.trim() === normalizedNumber
     );
     return Boolean(duplicate);
   };
